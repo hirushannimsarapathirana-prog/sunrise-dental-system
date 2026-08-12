@@ -11,15 +11,14 @@ public class DBConnection {
     private static final String Pass = "admin";
 
 
-    public static Connection getConnection () throws SQLException {
-            try {
-                return DriverManager.getConnection(URL, User, Pass);
-            }
-            catch (SQLException e){
-                e.printStackTrace();
-            }
+    public static Connection getConnection() throws SQLException {
+        try {
+            return DriverManager.getConnection(URL, User, Pass);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
-            return null;
+        return null;
 
     }
 

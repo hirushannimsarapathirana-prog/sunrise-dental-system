@@ -13,7 +13,7 @@ public class AppoimentDAO {
                 "dentist_name, treatment_type,appointment_date, appointment_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DBConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql);) {
+             PreparedStatement statement = connection.prepareStatement(sql);) {
 
             statement.setString(1, appointment.getAppointmentNumber());
             statement.setString(2, appointment.getPatientName());
@@ -26,7 +26,7 @@ public class AppoimentDAO {
 
             int rows = statement.executeUpdate();
 
-            return rows >0;
+            return rows > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,15 +34,16 @@ public class AppoimentDAO {
         }
 
     }
-    public  Appointment findByAppointmentNumber(String appointmentNumber ){
+
+    public Appointment findByAppointmentNumber(String appointmentNumber) {
 
         String sql = " SELECT appointment_number, patient_name, address,contact_number, dentist_name, treatment_type, " +
                 "appointment_date, appointment_time FROM appointments WHERE appointment_number = ?";
 
         try (Connection connection = DBConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql);){
+             PreparedStatement statement = connection.prepareStatement(sql);) {
 
-            statement.setString(1,appointmentNumber);
+            statement.setString(1, appointmentNumber);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
 
@@ -64,6 +65,7 @@ public class AppoimentDAO {
         }
         return null;
     }
+
     public boolean updateAppointment(Appointment appointment) {
 
         String sql = " UPDATE appointments SET patient_name = ?,address = ?,contact_number = ?,dentist_name = ?, treatment_type = ?," +
@@ -90,6 +92,7 @@ public class AppoimentDAO {
             return false;
         }
     }
+
     public boolean deleteAppointment(String appointmentNumber) {
 
         String sql = "DELETE FROM appointments WHERE appointment_number = ?";

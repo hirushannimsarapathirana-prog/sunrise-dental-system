@@ -1,22 +1,21 @@
 package com.sunrise.dental;
+import com.sun.net.httpserver.HttpServer;
+import java.net.InetSocketAddress;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) {
-        AppoimentDAO dao = new AppoimentDAO();
-        Appointment found = dao.findByAppointmentNumber("APT001");
 
-        if (found != null) {
+    public static void main(String[] args) throws IOException {
 
-            System.out.println("Appointment found!");
-            System.out.println("Patient: " + found.getPatientName());
-            System.out.println("Dentist: " + found.getDentistName());
-            System.out.println("Treatment: " + found.getTreatmentType());
-            System.out.println("Date: " + found.getAppointmentDate());
-            System.out.println("Time: " + found.getAppointmentTime());
-
-        } else {
-
-            System.out.println("Appointment not found.");
+        try {
+            HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+            server.createContext("/appointment",new DentalHttpServer());
+            server.start();
+            System.out.println("Dental Server started on port 8080");
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
+
 }
