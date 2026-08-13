@@ -1,4 +1,4 @@
-package com.sunrise.dental.Services;
+package com.sunrise.dental;
 
 public class Bill {
     private String billNumber;

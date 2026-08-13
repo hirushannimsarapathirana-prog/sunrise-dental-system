@@ -1,7 +1,5 @@
 package com.sunrise.dental;
 
-import com.sunrise.dental.Services.Bill;
-import com.sunrise.dental.Services.BillDAO;
 public class BillService {
 
     private final BillDAO billDAO;

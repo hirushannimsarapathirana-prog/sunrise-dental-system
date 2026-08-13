@@ -1,8 +1,7 @@
-package com.sunrise.dental.Services;
+package com.sunrise.dental;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sunrise.dental.BillService;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,7 +1,6 @@
 package com.sunrise.dental;
 
 import com.sun.net.httpserver.HttpServer;
-import com.sunrise.dental.Services.BillHttpServer;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,6 +14,7 @@ public class Main {
 
             server.createContext("/appointment", new DentalHttpServer());
             server.createContext("/bill", new BillHttpServer());
+            server.createContext("/login",new UserHttpServer());
 
             server.start();
 

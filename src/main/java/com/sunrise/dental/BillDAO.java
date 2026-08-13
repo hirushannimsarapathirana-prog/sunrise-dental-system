@@ -1,6 +1,4 @@
-package com.sunrise.dental.Services;
-
-import com.sunrise.dental.DBConnection;
+package com.sunrise.dental;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

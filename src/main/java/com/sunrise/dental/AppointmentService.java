@@ -1,7 +1,4 @@
-package com.sunrise.dental.Services;
-
-import com.sunrise.dental.AppoimentDAO;
-import com.sunrise.dental.Appointment;
+package com.sunrise.dental;
 
 public class AppointmentService {
     private final AppoimentDAO appoimentDAO;
