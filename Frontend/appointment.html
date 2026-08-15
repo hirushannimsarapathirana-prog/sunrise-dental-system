@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Appointments - Sunrise Dental</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-tooth"></i>
+            </div>
+
+            <div>
+                <h2>Sunrise Dental</h2>
+                <span>Clinic Management</span>
+            </div>
+
+        </div>
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-item">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="appointment.html" class="nav-item active">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Appointments</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+                <span>Billing</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-circle-question"></i>
+                <span>Help</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="index.html" class="nav-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+
+        </div>
+
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Appointments</h1>
+
+                <p>
+                    Create a new dental appointment
+                </p>
+
+            </div>
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <div class="user-info">
+
+                    <strong>Admin</strong>
+
+                    <span>Administrator</span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+
+                <h2>New Appointment</h2>
+
+                <p>
+                    Enter patient and appointment details
+                </p>
+
+            </div>
+
+            <form id="appointmentForm">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+
+                        <label for="appointmentNumber">
+                            Appointment Number
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-hashtag"></i>
+
+                            <input
+                                type="text"
+                                id="appointmentNumber"
+                                name="appointmentNumber"
+                                readonly
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="patientName">
+                            Patient Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-user"></i>
+
+                            <input
+                                type="text"
+                                id="patientName"
+                                name="patientName"
+                                placeholder="Enter patient name"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="address">
+                            Address
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-location-dot"></i>
+
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                placeholder="Enter address"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="contactNumber">
+                            Contact Number
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-phone"></i>
+
+                            <input
+                                type="tel"
+                                id="contactNumber"
+                                name="contactNumber"
+                                placeholder="Enter contact number"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="dentistName">
+                            Dentist Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-user-doctor"></i>
+
+                            <select
+                                id="dentistName"
+                                name="dentistName"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Dentist
+                                </option>
+
+                                <option value="Dr. Kasun Perera">
+                                    Dr. Kasun Perera
+                                </option>
+
+                                <option value="Dr. Nimal Fernando">
+                                    Dr. Nimal Fernando
+                                </option>
+
+                                <option value="Dr. Shehan Silva">
+                                    Dr. Shehan Silva
+                                </option>
+
+                                <option value="Dr. Tharindu Jayasinghe">
+                                    Dr. Tharindu Jayasinghe
+                                </option>
+
+                                <option value="Dr. Dilshan Perera">
+                                    Dr. Dilshan Perera
+                                </option>
+
+                                <option value="Dr. Amaya Fernando">
+                                    Dr. Amaya Fernando
+                                </option>
+
+                                <option value="Dr. Sanduni Silva">
+                                    Dr. Sanduni Silva
+                                </option>
+
+                                <option value="Dr. Kavindu Wijesinghe">
+                                    Dr. Kavindu Wijesinghe
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="treatmentType">
+                            Treatment Type
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-tooth"></i>
+
+                            <select
+                                id="treatmentType"
+                                name="treatmentType"
+                                required
+                            >
+
+                                <option value="">
+                                    Select Treatment
+                                </option>
+
+                                <option value="Dental Cleaning">
+                                    Dental Cleaning
+                                </option>
+
+                                <option value="Teeth Whitening">
+                                    Teeth Whitening
+                                </option>
+
+                                <option value="Dental Filling">
+                                    Dental Filling
+                                </option>
+
+                                <option value="Root Canal Treatment">
+                                    Root Canal Treatment
+                                </option>
+
+                                <option value="Tooth Extraction">
+                                    Tooth Extraction
+                                </option>
+
+                                <option value="Dental Crown">
+                                    Dental Crown
+                                </option>
+
+                                <option value="Dental Bridge">
+                                    Dental Bridge
+                                </option>
+
+                                <option value="Dental Checkup">
+                                    Dental Checkup
+                                </option>
+
+                                <option value="Braces Consultation">
+                                    Braces Consultation
+                                </option>
+
+                                <option value="Dental Implant">
+                                    Dental Implant
+                                </option>
+
+                                <option value="Gum Treatment">
+                                    Gum Treatment
+                                </option>
+
+                                <option value="Emergency Dental Treatment">
+                                    Emergency Dental Treatment
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="appointmentDate">
+                            Appointment Date
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-calendar"></i>
+
+                            <input
+                                type="date"
+                                id="appointmentDate"
+                                name="appointmentDate"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="appointmentTime">
+                            Appointment Time
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-clock"></i>
+
+                            <input
+                                type="time"
+                                id="appointmentTime"
+                                name="appointmentTime"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="login-button appointment-button">
+
+                    <i class="fa-solid fa-calendar-plus"></i>
+
+                    Create Appointment
+
+                </button>
+
+                <p
+                    id="appointmentMessage"
+                    class="login-message">
+                </p>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="js/appointment.js"></script>
+
+</body>
+
+</html>
