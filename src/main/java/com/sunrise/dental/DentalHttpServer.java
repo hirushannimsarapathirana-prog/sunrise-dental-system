@@ -11,119 +11,171 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class DentalHttpServer implements HttpHandler {
+
     AppointmentService appointmentService = new AppointmentService(new AppoimentDAO());
+
     Gson gson = new Gson();
 
-    private void sendResponse(HttpExchange exchange, int statusCode, String response)
-            throws IOException {
+    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
 
         byte[] responseBytes = response.getBytes(StandardCharsets.UTF_8);
 
-        exchange.getResponseHeaders().set(
-                "Content-Type",
-                "text/plain; charset=UTF-8"
-        );
+        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
 
         exchange.sendResponseHeaders(statusCode, responseBytes.length);
 
         try (OutputStream outputStream = exchange.getResponseBody()) {
+
             outputStream.write(responseBytes);
         }
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
+
         exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+
         exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "*");
+
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 
-
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
+
             exchange.sendResponseHeaders(204, -1);
             return;
-
-
         }
+
         String method = exchange.getRequestMethod();
 
         if (method.equalsIgnoreCase("POST")) {
 
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody()))) {
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
 
                 StringBuilder stringBuilder = new StringBuilder();
+
                 String line;
+
                 while ((line = bufferedReader.readLine()) != null) {
+
                     stringBuilder.append(line);
                 }
+
                 Appointment appointment = gson.fromJson(stringBuilder.toString(), Appointment.class);
 
                 boolean saved = appointmentService.createAppointment(appointment);
 
-                String response = saved ? "Appointment Saved Successfully" : "Failed to Save Appointment";
+                if (saved) {
 
-                int statusCode = saved ? 200 : 500;
+                    String response = gson.toJson(new AppointmentResponse("Appointment Saved Successfully", appointment.getAppointmentNumber()));
 
-                sendResponse(exchange, statusCode, response);
+                    sendResponse(exchange, 200, response);
 
+                } else {
+
+                    String response = gson.toJson(new AppointmentResponse("Failed to Save Appointment", null));
+
+                    sendResponse(exchange, 500, response);
+                }
             }
 
-        } else if (method.equalsIgnoreCase("GET") && exchange.getRequestURI().getQuery() != null) {
+        } else if (method.equalsIgnoreCase("GET")) {
 
             String query = exchange.getRequestURI().getQuery();
-            String[] data = query.split("=");
-            if (data.length < 2) {
-                String response = "Appointment Number is required";
-                sendResponse(exchange, 400, response);
+
+            if (query == null || query.isBlank()) {
+
+                String appointmentNumber = appointmentService.getNextAppointmentNumber();
+
+                String response = gson.toJson(new AppointmentResponse("Next Appointment Number", appointmentNumber));
+
+                sendResponse(exchange, 200, response);
+
                 return;
             }
+
+            String[] data = query.split("=");
+
+            if (data.length < 2) {
+
+                sendResponse(exchange, 400, gson.toJson(new AppointmentResponse("Appointment Number is required", null)));
+
+                return;
+            }
+
             String appointmentNumber = data[1];
+
             Appointment appointment = appointmentService.findAppointment(appointmentNumber);
+
             if (appointment == null) {
-                String response = "Appointment Not Found";
-                sendResponse(exchange, 404, response);
+
+                sendResponse(exchange, 404, gson.toJson(new AppointmentResponse("Appointment Not Found", null)));
+
+                return;
             }
+
             String response = gson.toJson(appointment);
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(200, response.getBytes().length);
-            try (OutputStream outputStream = exchange.getResponseBody()) {
 
-                outputStream.write(response.getBytes());
-            }
-
+            sendResponse(exchange, 200, response);
 
         } else if (method.equalsIgnoreCase("PUT")) {
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(),
-                    StandardCharsets.UTF_8));
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
 
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
+                StringBuilder stringBuilder = new StringBuilder();
 
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
+                String line;
 
+                while ((line = bufferedReader.readLine()) != null) {
+
+                    stringBuilder.append(line);
+                }
+
+                Appointment appointment = gson.fromJson(stringBuilder.toString(), Appointment.class);
+
+                boolean updated = appointmentService.updateAppointment(appointment);
+
+                String result = updated ? "Appointment Updated Successfully" : "Appointment Update Failed";
+
+                int statusCode = updated ? 200 : 500;
+
+                sendResponse(exchange, statusCode, gson.toJson(new AppointmentResponse(result, null)));
             }
-            String reader = stringBuilder.toString();
-            Appointment appointment = gson.fromJson(reader, Appointment.class);
-            boolean response = appointmentService.updateAppointment(appointment);
-            String result = response ? "Appointment Updated Successfully" : "Appointment Update Failed";
-            int statusCode = response ? 200 : 500;
 
-            sendResponse(exchange, statusCode, result);
-
-
-        } else if ((method.equalsIgnoreCase("DELETE") && exchange.getRequestURI().getQuery() != null)) {
+        } else if (method.equalsIgnoreCase("DELETE") && exchange.getRequestURI().getQuery() != null) {
 
             String query = exchange.getRequestURI().getQuery();
+
             String[] data = query.split("=");
+
+            if (data.length < 2) {
+
+                sendResponse(exchange, 400, gson.toJson(new AppointmentResponse("Appointment Number is required", null)));
+
+                return;
+            }
+
             String appointmentNumber = data[1];
+
             boolean deleted = appointmentService.deleteAppointment(appointmentNumber);
+
             String response = deleted ? "Appointment Deleted Successfully" : "Appointment Delete Failed";
+
             int statusCode = deleted ? 200 : 500;
 
-            sendResponse(exchange, statusCode, response);
-
+            sendResponse(exchange, statusCode, gson.toJson(new AppointmentResponse(response, null)));
         }
+    }
 
+    static class AppointmentResponse {
+
+        private String message;
+
+        private String appointmentNumber;
+
+        public AppointmentResponse(String message, String appointmentNumber) {
+
+            this.message = message;
+            this.appointmentNumber = appointmentNumber;
+        }
     }
 }
