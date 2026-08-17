@@ -50,6 +50,11 @@ public class BillService {
         return billDAO.findByBillNumber(billNumber);
     }
 
+    public String getNextBillNumber() {
+
+        return billDAO.getNextBillNumber();
+    }
+
     public boolean updateBill(Bill bill) {
 
         if (bill == null) {

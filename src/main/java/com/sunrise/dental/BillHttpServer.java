@@ -1,4 +1,5 @@
 package com.sunrise.dental;
+
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -16,37 +17,48 @@ public class BillHttpServer implements HttpHandler {
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
 
-        byte[] responseByte = response.getBytes(StandardCharsets.UTF_8);
-        exchange.getResponseHeaders().add("Content-Type",
-                "text/plain; charset=UTF-8");
+        byte[] responseBytes = response.getBytes(StandardCharsets.UTF_8);
 
-        exchange.sendResponseHeaders(statusCode, responseByte.length);
+        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+
+        exchange.sendResponseHeaders(statusCode, responseBytes.length);
+
         try (OutputStream outputStream = exchange.getResponseBody()) {
-            outputStream.write(responseByte);
+
+            outputStream.write(responseBytes);
         }
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "*");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+
+        exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
+
+        exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "*");
+
+        exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
 
             exchange.sendResponseHeaders(204, -1);
             return;
         }
+
         String method = exchange.getRequestMethod();
 
         if (method.equalsIgnoreCase("POST")) {
 
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
+
                 StringBuilder stringBuilder = new StringBuilder();
+
                 String line;
+
                 while ((line = bufferedReader.readLine()) != null) {
+
                     stringBuilder.append(line);
                 }
+
                 Bill bill = gson.fromJson(stringBuilder.toString(), Bill.class);
 
                 boolean saved = billService.createBill(bill);
@@ -55,66 +67,106 @@ public class BillHttpServer implements HttpHandler {
 
                 int statusCode = saved ? 200 : 500;
 
-                sendResponse(exchange, statusCode, response);
-
+                sendResponse(exchange, statusCode, gson.toJson(response));
             }
-        } else if ((method.equalsIgnoreCase("GET") && exchange.getRequestURI().getQuery() != null)) {
+
+        } else if (method.equalsIgnoreCase("GET")) {
 
             String query = exchange.getRequestURI().getQuery();
-            String[] data = query.split("=");
-            if (data.length < 2) {
-                String response = "Bill Number is Required ";
-                sendResponse(exchange, 404, response);
+
+            if (query == null || query.isBlank()) {
+
+                String billNumber = billService.getNextBillNumber();
+
+                String response = gson.toJson(new BillNumberResponse("Next Bill Number", billNumber));
+
+                sendResponse(exchange, 200, response);
+
                 return;
             }
+
+            String[] data = query.split("=");
+
+            if (data.length < 2) {
+
+                sendResponse(exchange, 400, gson.toJson(new BillNumberResponse("Bill Number is Required", null)));
+
+                return;
+            }
+
             String billNumber = data[1];
+
             Bill bill = billService.findBill(billNumber);
 
             if (bill == null) {
-                String response = "Bill Not Found";
-                sendResponse(exchange, 404, response);
+
+                sendResponse(exchange, 404, gson.toJson(new BillNumberResponse("Bill Not Found", null)));
+
                 return;
             }
-            String response = gson.toJson(bill);
-            exchange.getResponseHeaders().add("Content-Type", "application/json");
-            exchange.sendResponseHeaders(200, response.getBytes().length);
-            try (OutputStream outputStream = exchange.getResponseBody()) {
 
-                outputStream.write(response.getBytes());
-            }
+            sendResponse(exchange, 200, gson.toJson(bill));
 
         } else if (method.equalsIgnoreCase("PUT")) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(),StandardCharsets.UTF_8));
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine())!= null){
 
-                stringBuilder.append(line);
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
+
+                StringBuilder stringBuilder = new StringBuilder();
+
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+
+                    stringBuilder.append(line);
+                }
+
+                Bill bill = gson.fromJson(stringBuilder.toString(), Bill.class);
+
+                boolean updated = billService.updateBill(bill);
+
+                String response = updated ? "Bill Updated Successfully" : "Bill Update Failed";
+
+                int statusCode = updated ? 200 : 500;
+
+                sendResponse(exchange, statusCode, gson.toJson(response));
             }
-            String reader = stringBuilder.toString();
-            Bill bill = gson.fromJson(reader,Bill.class);
-            boolean saved = billService.updateBill(bill);
-            String result = saved ? "Bill Updated Successfully" : "Bill Update Failed";
-            int statusCode = saved ? 200 : 500;
-            sendResponse(exchange,statusCode,result);
 
-        }
-        else if ((method.equalsIgnoreCase("DELETE"))&& exchange.getRequestURI().getQuery() !=null){
+        } else if (method.equalsIgnoreCase("DELETE") && exchange.getRequestURI().getQuery() != null) {
 
             String query = exchange.getRequestURI().getQuery();
-            String [] data = query.split("=");
-            if (data.length < 2){
-                String response = "Bill Number is Required ";
-                sendResponse(exchange,404,response);
+
+            String[] data = query.split("=");
+
+            if (data.length < 2) {
+
+                sendResponse(exchange, 400, gson.toJson(new BillNumberResponse("Bill Number is Required", null)));
+
                 return;
             }
-            String billNumber = data[1];
-            boolean deleted = billService.deleteBill(billNumber);
-            String response = deleted ?"Bill Deleted Successfully" : "Bill Delete Failed";
-            int statusCode = deleted ? 200 : 500;
-            sendResponse(exchange,statusCode,response);
-        }
 
+            String billNumber = data[1];
+
+            boolean deleted = billService.deleteBill(billNumber);
+
+            String response = deleted ? "Bill Deleted Successfully" : "Bill Delete Failed";
+
+            int statusCode = deleted ? 200 : 500;
+
+            sendResponse(exchange, statusCode, gson.toJson(response));
+        }
     }
 
+    static class BillNumberResponse {
+
+        private String message;
+
+        private String billNumber;
+
+        public BillNumberResponse(String message, String billNumber) {
+
+            this.message = message;
+
+            this.billNumber = billNumber;
+        }
+    }
 }

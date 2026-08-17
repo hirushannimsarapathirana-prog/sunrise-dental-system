@@ -6,8 +6,37 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BillDAO {
+    public String getNextBillNumber() {
 
+        String sql = "SELECT bill_number FROM bills ORDER BY bill_number DESC LIMIT 1";
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+
+                String lastBillNumber =
+                        resultSet.getString("bill_number");
+
+                int number =
+                        Integer.parseInt(lastBillNumber.substring(3));
+
+                number++;
+
+                return String.format("BIL%03d", number);
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+
+        return "BIL001";
+    }
     public boolean createBill(Bill bill) {
+
 
         String sql = "INSERT INTO bills (bill_number, appointment_number, treatment_type," +
                 " treatment_cost, consultation_fee, total_cost) VALUES (?, ?, ?, ?, ?, ?)";

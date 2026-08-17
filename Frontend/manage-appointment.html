@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Appointments - Sunrise Dental</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-tooth"></i>
+            </div>
+
+            <div>
+                <h2>Sunrise Dental</h2>
+                <span>Clinic Management</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="dashboard.html" class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="appointment.html" class="nav-item">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+                <span>New Appointment</span>
+
+            </a>
+
+
+            <a href="manage-appointment.html" class="nav-item active">
+
+                <i class="fa-solid fa-calendar-days"></i>
+
+                <span>Manage Appointments</span>
+
+            </a>
+
+
+            <a href="billing.html" class="nav-item">
+
+                <i class="fa-solid fa-file-invoice-dollar"></i>
+
+                <span>Billing</span>
+
+            </a>
+
+
+            <a href="help.html" class="nav-item">
+
+                <i class="fa-solid fa-circle-question"></i>
+
+                <span>Help</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="index.html" class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Manage Appointments</h1>
+
+                <p>
+                    View, Edit, Update and Delete appointments
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+                <div class="user-info">
+
+                    <strong>Admin</strong>
+
+                    <span>Administrator</span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="dashboard-section">
+
+
+            <div class="section-header">
+
+                <h2>Find Appointment</h2>
+
+                <p>
+                    Enter the appointment number to view appointment details
+                </p>
+
+            </div>
+
+
+            <div class="appointment-search">
+
+                <div class="form-group">
+
+                    <label for="searchAppointmentNumber">
+                        Appointment Number
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="fa-solid fa-hashtag"></i>
+
+                        <input
+                            type="text"
+                            id="searchAppointmentNumber"
+                            placeholder="Enter appointment number"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="viewAppointmentButton"
+                    class="management-button">
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    View
+
+                </button>
+
+            </div>
+
+
+            <p
+                id="appointmentListMessage"
+                class="appointment-list-message">
+            </p>
+
+
+            <div
+                id="appointmentDetails"
+                class="appointment-details"
+                style="display: none;">
+
+
+                <div class="section-header">
+
+                    <h2>Appointment Details</h2>
+
+                    <p>
+                        Edit appointment information and save changes
+                    </p>
+
+                </div>
+
+
+                <form id="updateAppointmentForm">
+
+
+                    <div class="form-grid">
+
+
+                        <div class="form-group">
+
+                            <label for="editAppointmentNumber">
+                                Appointment Number
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-hashtag"></i>
+
+                                <input
+                                    type="text"
+                                    id="editAppointmentNumber"
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="editPatientName">
+                                Patient Name
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-user"></i>
+
+                                <input
+                                    type="text"
+                                    id="editPatientName"
+                                    required
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="editAddress">
+                                Address
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-location-dot"></i>
+
+                                <input
+                                    type="text"
+                                    id="editAddress"
+                                    required
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="editContactNumber">
+                                Contact Number
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-phone"></i>
+
+                                <input
+                                    type="tel"
+                                    id="editContactNumber"
+                                    required
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="editDentistName">
+                                Dentist Name
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-user-doctor"></i>
+
+                                <select
+                                    id="editDentistName"
+                                    required
+                                    disabled>
+
+                                    <option value="">
+                                        Select Dentist
+                                    </option>
+
+                                    <option value="Dr. Kasun Perera">
+                                        Dr. Kasun Perera
+                                    </option>
+
+                                    <option value="Dr. Nimal Fernando">
+                                        Dr. Nimal Fernando
+                                    </option>
+
+                                    <option value="Dr. Shehan Silva">
+                                        Dr. Shehan Silva
+                                    </option>
+
+                                    <option value="Dr. Tharindu Jayasinghe">
+                                        Dr. Tharindu Jayasinghe
+                                    </option>
+
+                                    <option value="Dr. Dilshan Perera">
+                                        Dr. Dilshan Perera
+                                    </option>
+
+                                    <option value="Dr. Amaya Fernando">
+                                        Dr. Amaya Fernando
+                                    </option>
+
+                                    <option value="Dr. Sanduni Silva">
+                                        Dr. Sanduni Silva
+                                    </option>
+
+                                    <option value="Dr. Kavindu Wijesinghe">
+                                        Dr. Kavindu Wijesinghe
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="editTreatmentType">
+                                Treatment Type
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-tooth"></i>
+
+                                <select
+                                    id="editTreatmentType"
+                                    required
+                                    disabled>
+
+                                    <option value="">
+                                        Select Treatment
+                                    </option>
+
+                                    <option value="Dental Cleaning">
+                                        Dental Cleaning
+                                    </option>
+
+                                    <option value="Teeth Whitening">
+                                        Teeth Whitening
+                                    </option>
+
+                                    <option value="Dental Filling">
+                                        Dental Filling
+                                    </option>
+
+                                    <option value="Root Canal Treatment">
+                                        Root Canal Treatment
+                                    </option>
+
+                                    <option value="Tooth Extraction">
+                                        Tooth Extraction
+                                    </option>
+
+                                    <option value="Dental Crown">
+                                        Dental Crown
+                                    </option>
+
+                                    <option value="Dental Bridge">
+                                        Dental Bridge
+                                    </option>
+
+                                    <option value="Dental Checkup">
+                                        Dental Checkup
+                                    </option>
+
+                                    <option value="Braces Consultation">
+                                        Braces Consultation
+                                    </option>
+
+                                    <option value="Dental Implant">
+                                        Dental Implant
+                                    </option>
+
+                                    <option value="Gum Treatment">
+                                        Gum Treatment
+                                    </option>
+
+                                    <option value="Emergency Dental Treatment">
+                                        Emergency Dental Treatment
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="editAppointmentDate">
+                                Appointment Date
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-calendar"></i>
+
+                                <input
+                                    type="date"
+                                    id="editAppointmentDate"
+                                    required
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="editAppointmentTime">
+                                Appointment Time
+                                <span class="required">*</span>
+                            </label>
+
+                            <div class="input-wrapper">
+
+                                <i class="fa-solid fa-clock"></i>
+
+                                <input
+                                    type="time"
+                                    id="editAppointmentTime"
+                                    required
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="management-buttons">
+
+
+                        <button
+                            type="button"
+                            id="editAppointmentButton"
+                            class="management-button edit-button">
+
+                            <i class="fa-solid fa-pen-to-square"></i>
+
+                            Edit
+
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            id="updateAppointmentButton"
+                            class="management-button update-button"
+                            style="display: none;">
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            Update
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            id="deleteAppointmentButton"
+                            class="management-button delete-button">
+
+                            <i class="fa-solid fa-trash"></i>
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="js/manage-appointment.js"></script>
+
+</body>
+
+</html>

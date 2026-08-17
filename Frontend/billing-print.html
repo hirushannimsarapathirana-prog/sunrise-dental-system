@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Bill - Sunrise Dental</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="bill-page">
+
+    <div class="bill-header">
+
+        <div class="clinic-info">
+            <h1>Sunrise Dental</h1>
+            <p>Dental Clinic Management System</p>
+            <p>Professional Dental Care</p>
+        </div>
+
+        <div class="bill-title">
+            <h2>INVOICE</h2>
+            <span>Dental Bill</span>
+        </div>
+
+    </div>
+
+    <div class="bill-line"></div>
+
+    <div class="bill-information">
+
+        <div class="bill-info-group">
+            <span>Bill Number</span>
+            <strong id="printBillNumber">-</strong>
+        </div>
+
+        <div class="bill-info-group">
+            <span>Appointment Number</span>
+            <strong id="printAppointmentNumber">-</strong>
+        </div>
+
+    </div>
+
+    <div class="bill-section">
+
+        <h3>Billing Details</h3>
+
+        <table class="bill-table">
+
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>
+                        <strong id="printTreatmentType">-</strong>
+                        <small>Dental Treatment</small>
+                    </td>
+
+                    <td id="printTreatmentCost">Rs. 0.00</td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <strong>Consultation Fee</strong>
+                        <small>Doctor Consultation</small>
+                    </td>
+
+                    <td id="printConsultationFee">Rs. 0.00</td>
+                </tr>
+
+            </tbody>
+
+            <tfoot>
+
+                <tr>
+                    <td>Total Cost</td>
+                    <td id="printTotalCost">Rs. 0.00</td>
+                </tr>
+
+            </tfoot>
+
+        </table>
+
+    </div>
+
+    <div class="bill-footer">
+
+        <div>
+            <p>Thank you for choosing Sunrise Dental.</p>
+            <p>We appreciate your trust in our dental care.</p>
+        </div>
+
+        <div class="signature">
+            <div></div>
+            <span>Authorized Signature</span>
+        </div>
+
+    </div>
+
+    <div class="print-actions">
+
+        <button type="button" onclick="window.print()">
+            Print Bill
+        </button>
+
+        <button type="button" onclick="window.location.href='billing.html'">
+            Close
+        </button>
+
+    </div>
+
+</div>
+
+<script src="js/print-bill.js"></script>
+
+</body>
+
+</html>

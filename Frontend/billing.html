@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Appointments - Sunrise Dental</title>
-
+    <title>Billing - Sunrise Dental</title>
     <link rel="stylesheet" href="css/style.css">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 </head>
 
 <body>
@@ -23,7 +15,6 @@
     <aside class="sidebar">
 
         <div class="sidebar-brand">
-
             <div class="brand-icon">
                 <i class="fa-solid fa-tooth"></i>
             </div>
@@ -32,7 +23,6 @@
                 <h2>Sunrise Dental</h2>
                 <span>Clinic Management</span>
             </div>
-
         </div>
 
         <nav class="sidebar-nav">
@@ -42,20 +32,17 @@
                 <span>Dashboard</span>
             </a>
 
-            <a href="appointment.html" class="nav-item active">
+            <a href="appointment.html" class="nav-item">
                 <i class="fa-solid fa-calendar-check"></i>
-                <span>Appointments</span>
+                <span>New Appointment</span>
             </a>
 
             <a href="manage-appointment.html" class="nav-item">
-
                 <i class="fa-solid fa-calendar-days"></i>
-
                 <span>Manage Appointments</span>
-
             </a>
 
-            <a href="billing.html" class="nav-item">
+            <a href="billing.html" class="nav-item active">
                 <i class="fa-solid fa-file-invoice-dollar"></i>
                 <span>Billing</span>
             </a>
@@ -83,13 +70,8 @@
         <header class="topbar">
 
             <div>
-
-                <h1>Appointments</h1>
-
-                <p>
-                    Create a new dental appointment
-                </p>
-
+                <h1>Billing</h1>
+                <p>Create and manage dental bills</p>
             </div>
 
             <div class="user-profile">
@@ -99,33 +81,44 @@
                 </div>
 
                 <div class="user-info">
-
                     <strong>Admin</strong>
-
                     <span>Administrator</span>
-
                 </div>
 
             </div>
 
         </header>
-        
 
-        <section class="dashboard-section">
+        <section class="dashboard-section billing-section">
 
             <div class="section-header">
-
-                <h2>New Appointment</h2>
-
-                <p>
-                    Enter patient and appointment details
-                </p>
-
+                <h2>Create Bill</h2>
+                <p>Enter billing information for the appointment</p>
             </div>
 
-            <form id="appointmentForm">
+            <form id="billingForm">
 
-                <div class="form-grid">
+                <div class="billing-grid">
+
+                    <div class="form-group">
+
+                        <label for="billNumber">
+                            Bill Number
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-receipt"></i>
+
+                            <input
+                                type="text"
+                                id="billNumber"
+                                readonly
+                            >
+
+                        </div>
+
+                    </div>
 
                     <div class="form-group">
 
@@ -141,137 +134,9 @@
                             <input
                                 type="text"
                                 id="appointmentNumber"
-                                name="appointmentNumber"
-                                readonly
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="patientName">
-                            Patient Name
-                            <span class="required">*</span>
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-solid fa-user"></i>
-
-                            <input
-                                type="text"
-                                id="patientName"
-                                name="patientName"
-                                placeholder="Enter patient name"
+                                placeholder="Enter appointment number"
                                 required
                             >
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="address">
-                            Address
-                            <span class="required">*</span>
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-solid fa-location-dot"></i>
-
-                            <input
-                                type="text"
-                                id="address"
-                                name="address"
-                                placeholder="Enter address"
-                                required
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="contactNumber">
-                            Contact Number
-                            <span class="required">*</span>
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-solid fa-phone"></i>
-
-                            <input
-                                type="tel"
-                                id="contactNumber"
-                                name="contactNumber"
-                                placeholder="Enter contact number"
-                                required
-                            >
-
-                        </div>
-
-                    </div>
-
-                    <div class="form-group">
-
-                        <label for="dentistName">
-                            Dentist Name
-                            <span class="required">*</span>
-                        </label>
-
-                        <div class="input-wrapper">
-
-                            <i class="fa-solid fa-user-doctor"></i>
-
-                            <select
-                                id="dentistName"
-                                name="dentistName"
-                                required
-                            >
-
-                                <option value="">
-                                    Select Dentist
-                                </option>
-
-                                <option value="Dr. Kasun Perera">
-                                    Dr. Kasun Perera
-                                </option>
-
-                                <option value="Dr. Nimal Fernando">
-                                    Dr. Nimal Fernando
-                                </option>
-
-                                <option value="Dr. Shehan Silva">
-                                    Dr. Shehan Silva
-                                </option>
-
-                                <option value="Dr. Tharindu Jayasinghe">
-                                    Dr. Tharindu Jayasinghe
-                                </option>
-
-                                <option value="Dr. Dilshan Perera">
-                                    Dr. Dilshan Perera
-                                </option>
-
-                                <option value="Dr. Amaya Fernando">
-                                    Dr. Amaya Fernando
-                                </option>
-
-                                <option value="Dr. Sanduni Silva">
-                                    Dr. Sanduni Silva
-                                </option>
-
-                                <option value="Dr. Kavindu Wijesinghe">
-                                    Dr. Kavindu Wijesinghe
-                                </option>
-
-                            </select>
 
                         </div>
 
@@ -354,19 +219,21 @@
 
                     <div class="form-group">
 
-                        <label for="appointmentDate">
-                            Appointment Date
+                        <label for="treatmentCost">
+                            Treatment Cost
                             <span class="required">*</span>
                         </label>
 
                         <div class="input-wrapper">
 
-                            <i class="fa-solid fa-calendar"></i>
+                            <i class="fa-solid fa-money-bill-wave"></i>
 
                             <input
-                                type="date"
-                                id="appointmentDate"
-                                name="appointmentDate"
+                                type="number"
+                                id="treatmentCost"
+                                placeholder="0.00"
+                                min="0"
+                                step="0.01"
                                 required
                             >
 
@@ -376,20 +243,43 @@
 
                     <div class="form-group">
 
-                        <label for="appointmentTime">
-                            Appointment Time
+                        <label for="consultationFee">
+                            Consultation Fee
                             <span class="required">*</span>
                         </label>
 
                         <div class="input-wrapper">
 
-                            <i class="fa-solid fa-clock"></i>
+                            <i class="fa-solid fa-user-doctor"></i>
 
                             <input
-                                type="time"
-                                id="appointmentTime"
-                                name="appointmentTime"
+                                type="number"
+                                id="consultationFee"
+                                placeholder="0.00"
+                                min="0"
+                                step="0.01"
                                 required
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="totalCost">
+                            Total Cost
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <i class="fa-solid fa-calculator"></i>
+
+                            <input
+                                type="number"
+                                id="totalCost"
+                                placeholder="0.00"
+                                readonly
                             >
 
                         </div>
@@ -398,20 +288,41 @@
 
                 </div>
 
-                <button
-                    type="submit"
-                    class="login-button appointment-button">
+                <div class="billing-actions">
 
-                    <i class="fa-solid fa-calendar-plus"></i>
+                    <button
+                        type="submit"
+                        class="management-button billing-save-button"
+                        id="saveBillButton">
 
-                    Create Appointment
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Bill
 
-                </button>
+                    </button>
 
-                <p
-                    id="appointmentMessage"
-                    class="login-message">
-                </p>
+                    <button
+                        type="button"
+                        class="management-button billing-print-button"
+                        id="printBillButton" >
+
+                        <i class="fa-solid fa-print"></i>
+                        Print
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="management-button billing-clear-button"
+                        id="clearBillButton">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Clear
+
+                    </button>
+
+                </div>
+
+                <p id="billingMessage"></p>
 
             </form>
 
@@ -421,8 +332,7 @@
 
 </div>
 
-<script src="js/appointment.js"></script>
+<script src="js/billing.js"></script>
 
 </body>
-
 </html>
