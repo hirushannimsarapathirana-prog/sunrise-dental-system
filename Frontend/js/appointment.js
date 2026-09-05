@@ -1,8 +1,14 @@
-const appointmentForm = document.getElementById("appointmentForm");
+const appointmentForm =
+    document.getElementById("appointmentForm");
+
 const appointmentNumberInput =
     document.getElementById("appointmentNumber");
+
 const appointmentMessage =
     document.getElementById("appointmentMessage");
+
+let bookedAppointments =
+    JSON.parse(localStorage.getItem("bookedAppointments")) || [];
 
 async function loadAppointmentNumber() {
 
@@ -24,127 +30,206 @@ async function loadAppointmentNumber() {
 
         } else {
 
-            appointmentNumberInput.value = "Unable to generate";
+            appointmentNumberInput.value =
+                "Unable to generate";
 
             console.error(result.message);
         }
 
     } catch (error) {
 
-        console.error("Appointment Number Error:", error);
+        console.error(
+            "Appointment Number Error:",
+            error
+        );
 
         appointmentNumberInput.value =
             "Unable to connect";
     }
 }
 
-
 loadAppointmentNumber();
 
+function isAppointmentAlreadyBooked(
+    dentistName,
+    appointmentDate,
+    appointmentTime
+) {
 
-appointmentForm.addEventListener("submit", async function (event) {
+    return bookedAppointments.some(function (appointment) {
 
-    event.preventDefault();
+        return (
+            appointment.dentistName === dentistName &&
+            appointment.appointmentDate === appointmentDate &&
+            appointment.appointmentTime === appointmentTime
+        );
 
-    const patientName =
-        document.getElementById("patientName").value;
+    });
+}
 
-    const address =
-        document.getElementById("address").value;
+function saveBookedAppointment(
+    dentistName,
+    appointmentDate,
+    appointmentTime
+) {
 
-    const contactNumber =
-        document.getElementById("contactNumber").value;
+    const newBooking = {
 
-    const dentistName =
-        document.getElementById("dentistName").value;
-
-    const treatmentType =
-        document.getElementById("treatmentType").value;
-
-    const appointmentDate =
-        document.getElementById("appointmentDate").value;
-
-    const appointmentTime =
-        document.getElementById("appointmentTime").value;
-
-
-    const appointment = {
-
-        patientName: patientName,
-        address: address,
-        contactNumber: contactNumber,
         dentistName: dentistName,
-        treatmentType: treatmentType,
         appointmentDate: appointmentDate,
         appointmentTime: appointmentTime
     };
 
+    bookedAppointments.push(newBooking);
 
-    try {
+    localStorage.setItem(
+        "bookedAppointments",
+        JSON.stringify(bookedAppointments)
+    );
+}
 
-        const response = await fetch(
-            "http://localhost:8080/appointment",
-            {
-                method: "POST",
+appointmentForm.addEventListener(
+    "submit",
+    async function (event) {
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+        event.preventDefault();
 
-                body: JSON.stringify(appointment)
-            }
-        );
+        const patientName =
+            document.getElementById("patientName").value.trim();
 
+        const address =
+            document.getElementById("address").value.trim();
 
-        const result = await response.json();
+        const contactNumber =
+            document.getElementById("contactNumber").value.trim();
 
+        const dentistName =
+            document.getElementById("dentistName").value;
 
-        if (response.ok) {
+        const treatmentType =
+            document.getElementById("treatmentType").value;
 
-           
-            appointmentNumberInput.value =
-                result.appointmentNumber;
+        const appointmentDate =
+            document.getElementById("appointmentDate").value;
 
+        const appointmentTime =
+            document.getElementById("appointmentTime").value;
 
-            appointmentMessage.textContent =
-                result.message +
-                " - " +
-                result.appointmentNumber;
+        const alreadyBooked =
+            isAppointmentAlreadyBooked(
+                dentistName,
+                appointmentDate,
+                appointmentTime
+            );
 
-            appointmentMessage.style.color = "green";
-
-
-            
-            document.getElementById("patientName").value = "";
-            document.getElementById("address").value = "";
-            document.getElementById("contactNumber").value = "";
-            document.getElementById("dentistName").value = "";
-            document.getElementById("treatmentType").value = "";
-            document.getElementById("appointmentDate").value = "";
-            document.getElementById("appointmentTime").value = "";
-
-
-            
-            await loadAppointmentNumber();
-
-
-        } else {
+        if (alreadyBooked) {
 
             appointmentMessage.textContent =
-                result.message;
+                "This doctor is already booked for the selected date and time. Please select another time.";
 
             appointmentMessage.style.color = "red";
+
+            return;
         }
 
+        const appointment = {
 
-    } catch (error) {
+            patientName: patientName,
+            address: address,
+            contactNumber: contactNumber,
+            dentistName: dentistName,
+            treatmentType: treatmentType,
+            appointmentDate: appointmentDate,
+            appointmentTime: appointmentTime
+        };
 
-        console.error("Appointment Error:", error);
+        try {
 
-        appointmentMessage.textContent =
-            "Unable to connect to server.";
+            const response = await fetch(
+                "http://localhost:8080/appointment",
+                {
+                    method: "POST",
 
-        appointmentMessage.style.color = "red";
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(appointment)
+                }
+            );
+
+            const result = await response.json();
+
+            if (response.ok) {
+
+                saveBookedAppointment(
+                    dentistName,
+                    appointmentDate,
+                    appointmentTime
+                );
+
+                appointmentNumberInput.value =
+                    result.appointmentNumber;
+
+                appointmentMessage.textContent =
+                    result.message +
+                    " - " +
+                    result.appointmentNumber;
+
+                appointmentMessage.style.color =
+                    "green";
+
+                document.getElementById(
+                    "patientName"
+                ).value = "";
+
+                document.getElementById(
+                    "address"
+                ).value = "";
+
+                document.getElementById(
+                    "contactNumber"
+                ).value = "";
+
+                document.getElementById(
+                    "dentistName"
+                ).value = "";
+
+                document.getElementById(
+                    "treatmentType"
+                ).value = "";
+
+                document.getElementById(
+                    "appointmentDate"
+                ).value = "";
+
+                document.getElementById(
+                    "appointmentTime"
+                ).value = "";
+
+                await loadAppointmentNumber();
+
+            } else {
+
+                appointmentMessage.textContent =
+                    result.message;
+
+                appointmentMessage.style.color =
+                    "red";
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Appointment Error:",
+                error
+            );
+
+            appointmentMessage.textContent =
+                "Unable to connect to server.";
+
+            appointmentMessage.style.color =
+                "red";
+        }
     }
-
-});
+);
