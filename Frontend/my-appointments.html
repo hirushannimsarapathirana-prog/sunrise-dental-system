@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Appointments - Sunrise Dental</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-tooth"></i>
+            </div>
+
+            <div>
+                <h2>Sunrise Dental</h2>
+                <span>Dentist Panel</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="dentist-dashboard.html" class="nav-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="my-appointments.html" class="nav-item active">
+
+                <i class="fa-solid fa-calendar-check"></i>
+
+                <span>My Appointments</span>
+
+            </a>
+
+
+            <a href="dentist-help.html" class="nav-item">
+
+                <i class="fa-solid fa-circle-question"></i>
+
+                <span>Help</span>
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="index.html" class="nav-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <span>Logout</span>
+
+            </a>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>My Appointments</h1>
+
+                <p>
+                    View and check your scheduled appointments
+                </p>
+
+            </div>
+
+
+            <div class="user-profile">
+
+                <div class="user-avatar">
+
+                    <i class="fa-solid fa-user-doctor"></i>
+
+                </div>
+
+                <div class="user-info">
+
+                    <strong>Dr. Kasun</strong>
+
+                    <span>Dentist</span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+
+                <h2>Today's Appointments</h2>
+
+                <p>
+                    Check patient details and complete appointments
+                </p>
+
+            </div>
+
+
+            <div id="appointmentList">
+
+                <div class="quick-action">
+
+                    <div class="quick-icon">
+
+                        <i class="fa-solid fa-calendar-check"></i>
+
+                    </div>
+
+                    <div>
+
+                        <strong>Loading appointments...</strong>
+
+                        <span>
+                            Please wait
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+<script src="js/my-appointments.js"></script>
+
+<script src="js/auth.js"></script>
+
+</body>
+
+</html>
+

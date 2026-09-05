@@ -8,13 +8,16 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class DentalHttpServer implements HttpHandler {
 
     AppointmentService appointmentService = new AppointmentService(new AppoimentDAO());
 
     Gson gson = new Gson();
+
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
 
@@ -30,6 +33,7 @@ public class DentalHttpServer implements HttpHandler {
         }
     }
 
+
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
@@ -39,13 +43,20 @@ public class DentalHttpServer implements HttpHandler {
 
         exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
 
+
         if (exchange.getRequestMethod().equalsIgnoreCase("OPTIONS")) {
 
             exchange.sendResponseHeaders(204, -1);
             return;
         }
 
+
         String method = exchange.getRequestMethod();
+
+
+        // =========================
+        // POST
+        // =========================
 
         if (method.equalsIgnoreCase("POST")) {
 
@@ -60,9 +71,12 @@ public class DentalHttpServer implements HttpHandler {
                     stringBuilder.append(line);
                 }
 
+
                 Appointment appointment = gson.fromJson(stringBuilder.toString(), Appointment.class);
 
+
                 boolean saved = appointmentService.createAppointment(appointment);
+
 
                 if (saved) {
 
@@ -78,10 +92,20 @@ public class DentalHttpServer implements HttpHandler {
                 }
             }
 
-        } else if (method.equalsIgnoreCase("GET")) {
+            return;
+        }
+
+
+        // =========================
+        // GET
+        // =========================
+
+        if (method.equalsIgnoreCase("GET")) {
 
             String query = exchange.getRequestURI().getQuery();
 
+
+            // No query
             if (query == null || query.isBlank()) {
 
                 String appointmentNumber = appointmentService.getNextAppointmentNumber();
@@ -93,31 +117,67 @@ public class DentalHttpServer implements HttpHandler {
                 return;
             }
 
-            String[] data = query.split("=");
 
-            if (data.length < 2) {
+            // =========================
+            // Dentist appointments
+            // =========================
 
-                sendResponse(exchange, 400, gson.toJson(new AppointmentResponse("Appointment Number is required", null)));
+            if (query.startsWith("dentistName=")) {
+
+                String dentistName = URLDecoder.decode(query.substring("dentistName=".length()), StandardCharsets.UTF_8);
+
+
+                List<Appointment> appointments = appointmentService.findAppointmentsByDentist(dentistName);
+
+
+                String response = gson.toJson(appointments);
+
+
+                sendResponse(exchange, 200, response);
 
                 return;
             }
 
-            String appointmentNumber = data[1];
 
-            Appointment appointment = appointmentService.findAppointment(appointmentNumber);
+            // =========================
+            // Appointment number
+            // =========================
 
-            if (appointment == null) {
+            if (query.startsWith("appointmentNumber=")) {
 
-                sendResponse(exchange, 404, gson.toJson(new AppointmentResponse("Appointment Not Found", null)));
+                String appointmentNumber = URLDecoder.decode(query.substring("appointmentNumber=".length()), StandardCharsets.UTF_8);
+
+
+                Appointment appointment = appointmentService.findAppointment(appointmentNumber);
+
+
+                if (appointment == null) {
+
+                    sendResponse(exchange, 404, gson.toJson(new AppointmentResponse("Appointment Not Found", null)));
+
+                    return;
+                }
+
+
+                String response = gson.toJson(appointment);
+
+                sendResponse(exchange, 200, response);
 
                 return;
             }
 
-            String response = gson.toJson(appointment);
 
-            sendResponse(exchange, 200, response);
+            sendResponse(exchange, 400, gson.toJson(new AppointmentResponse("Invalid Query", null)));
 
-        } else if (method.equalsIgnoreCase("PUT")) {
+            return;
+        }
+
+
+        // =========================
+        // PUT
+        // =========================
+
+        if (method.equalsIgnoreCase("PUT")) {
 
             try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
 
@@ -130,47 +190,71 @@ public class DentalHttpServer implements HttpHandler {
                     stringBuilder.append(line);
                 }
 
+
                 Appointment appointment = gson.fromJson(stringBuilder.toString(), Appointment.class);
+
 
                 boolean updated = appointmentService.updateAppointment(appointment);
 
+
                 String result = updated ? "Appointment Updated Successfully" : "Appointment Update Failed";
 
+
                 int statusCode = updated ? 200 : 500;
+
 
                 sendResponse(exchange, statusCode, gson.toJson(new AppointmentResponse(result, null)));
             }
 
-        } else if (method.equalsIgnoreCase("DELETE") && exchange.getRequestURI().getQuery() != null) {
+            return;
+        }
+
+
+        // =========================
+        // DELETE
+        // =========================
+
+        if (method.equalsIgnoreCase("DELETE") && exchange.getRequestURI().getQuery() != null) {
 
             String query = exchange.getRequestURI().getQuery();
 
-            String[] data = query.split("=");
 
-            if (data.length < 2) {
+            if (!query.startsWith("appointmentNumber=")) {
 
                 sendResponse(exchange, 400, gson.toJson(new AppointmentResponse("Appointment Number is required", null)));
 
                 return;
             }
 
-            String appointmentNumber = data[1];
+
+            String appointmentNumber = URLDecoder.decode(query.substring("appointmentNumber=".length()), StandardCharsets.UTF_8);
+
 
             boolean deleted = appointmentService.deleteAppointment(appointmentNumber);
 
+
             String response = deleted ? "Appointment Deleted Successfully" : "Appointment Delete Failed";
+
 
             int statusCode = deleted ? 200 : 500;
 
+
             sendResponse(exchange, statusCode, gson.toJson(new AppointmentResponse(response, null)));
+
+            return;
         }
+
+
+        sendResponse(exchange, 405, gson.toJson(new AppointmentResponse("Method Not Allowed", null)));
     }
+
 
     static class AppointmentResponse {
 
         private String message;
 
         private String appointmentNumber;
+
 
         public AppointmentResponse(String message, String appointmentNumber) {
 

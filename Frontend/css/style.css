@@ -1921,3 +1921,40 @@ button {
         margin: 0;
     }
 }
+.done-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 80px;
+}
+
+.done-button:hover {
+    background-color: #218838;
+}
+
+.done-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .done-button {
+        padding: 7px 12px;
+        font-size: 13px;
+        min-width: 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .done-button {
+        padding: 6px 10px;
+        font-size: 12px;
+        min-width: 65px;
+    }
+}

@@ -1,5 +1,7 @@
 package com.sunrise.dental;
 
+import java.util.List;
+
 public class AppointmentService {
 
     private final AppoimentDAO appoimentDAO;
@@ -7,6 +9,7 @@ public class AppointmentService {
     public AppointmentService(AppoimentDAO appoimentDAO) {
         this.appoimentDAO = appoimentDAO;
     }
+
 
     public boolean createAppointment(Appointment appointment) {
 
@@ -49,10 +52,12 @@ public class AppointmentService {
         return appoimentDAO.createAppointment(appointment);
     }
 
+
     public String getNextAppointmentNumber() {
 
         return appoimentDAO.getNextAppointmentNumber();
     }
+
 
     public Appointment findAppointment(String appointmentNumber) {
 
@@ -62,6 +67,19 @@ public class AppointmentService {
 
         return appoimentDAO.findByAppointmentNumber(appointmentNumber);
     }
+
+
+    // Get appointments for a specific dentist
+    public List<Appointment> findAppointmentsByDentist(String dentistName) {
+
+        if (dentistName == null || dentistName.isBlank()) {
+
+            return List.of();
+        }
+
+        return appoimentDAO.findByDentistName(dentistName);
+    }
+
 
     public boolean updateAppointment(Appointment appointment) {
 
@@ -103,6 +121,7 @@ public class AppointmentService {
 
         return appoimentDAO.updateAppointment(appointment);
     }
+
 
     public boolean deleteAppointment(String appointmentNumber) {
 

@@ -8,18 +8,18 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public boolean login(User user) {
+    public User login(User user) {
 
         if (user == null) {
-            return false;
+            return null;
         }
 
         if (user.getUsername() == null || user.getUsername().isBlank()) {
-            return false;
+            return null;
         }
 
         if (user.getPassword() == null || user.getPassword().isBlank()) {
-            return false;
+            return null;
         }
 
         return userDAO.login(user.getUsername(), user.getPassword());
