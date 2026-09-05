@@ -1,147 +1,176 @@
 document.addEventListener("DOMContentLoaded", function () {
-const currentAppointment = document.getElementById("currentAppointment");
-const nextAppointment = document.getElementById("nextAppointment");
-const doneButton = document.getElementById("doneButton");
 
-const username = sessionStorage.getItem("username");
+    const currentAppointment =
+        document.getElementById("currentAppointment");
 
-let appointments = [];
+    const nextAppointment =
+        document.getElementById("nextAppointment");
 
-function normalizeName(name) {
-    return name
-        .toLowerCase()
-        .replace(/dr\.?/g, "")
-        .replace(/\s+/g, "")
-        .trim();
-}
+    const doneButton =
+        document.getElementById("doneButton");
 
-function isDentistAppointment(appointment) {
-    if (!username || !appointment.dentistName) {
-        return false;
+    const username =
+        sessionStorage.getItem("username");
+
+    let appointments = [];
+
+    function normalizeName(name) {
+        return name
+            .toLowerCase()
+            .replace(/dr\.?/g, "")
+            .replace(/\s+/g, "")
+            .trim();
     }
 
-    const dentistName = normalizeName(appointment.dentistName);
-    const loggedUser = normalizeName(username);
+    function isDentistAppointment(appointment) {
 
-    return dentistName.includes(loggedUser);
-}
+        if (!username || !appointment.dentistName) {
+            return false;
+        }
 
-async function loadAppointments() {
+        const dentistName =
+            normalizeName(appointment.dentistName);
 
-    if (!username) {
-        currentAppointment.textContent = "User not logged in";
-        nextAppointment.textContent = "User not logged in";
-        doneButton.disabled = true;
-        return;
+        const loggedUser =
+            normalizeName(username);
+
+        return dentistName.includes(loggedUser);
     }
 
-    try {
+    async function loadAppointments() {
 
-        const response = await fetch(
-            "http://localhost:8080/appointment?dentistName=" +
-            encodeURIComponent(username)
-        );
+        if (!username) {
+            currentAppointment.textContent =
+                "User not logged in";
 
-        if (!response.ok) {
-            showNoAppointments();
+            nextAppointment.textContent =
+                "Please login again";
+
+            doneButton.disabled = true;
+
             return;
         }
 
-        const result = await response.json();
+        try {
 
-        if (!Array.isArray(result)) {
+            const response = await fetch(
+                "http://localhost:8080/appointment?dentistName=" +
+                encodeURIComponent(username)
+            );
+
+            if (!response.ok) {
+
+                showNoAppointments();
+
+                return;
+            }
+
+            const result =
+                await response.json();
+
+            if (!Array.isArray(result)) {
+
+                showNoAppointments();
+
+                return;
+            }
+
+            appointments =
+                result.filter(function (appointment) {
+
+                    return isDentistAppointment(
+                        appointment
+                    );
+
+                });
+
+            displayAppointments();
+
+        } catch (error) {
+
+            console.error(
+                "Error loading appointments:",
+                error
+            );
+
+            currentAppointment.textContent =
+                "Unable to load appointment";
+
+            nextAppointment.textContent =
+                "Please make sure the server is running";
+
+            doneButton.disabled = true;
+        }
+    }
+
+    function displayAppointments() {
+
+        if (appointments.length === 0) {
+
             showNoAppointments();
+
             return;
         }
 
-        appointments = result.filter(function (appointment) {
-            return isDentistAppointment(appointment);
-        });
+        const current =
+            appointments[0];
 
-        const completedAppointment =
-            sessionStorage.getItem("completedAppointment");
-
-        if (completedAppointment) {
-            appointments = appointments.filter(function (appointment) {
-                return appointment.appointmentNumber !== completedAppointment;
-            });
-        }
-
-        displayAppointments();
-
-    } catch (error) {
-
-        console.error("Error loading appointments:", error);
+        const next =
+            appointments[1];
 
         currentAppointment.textContent =
-            "Unable to load appointment";
+            current.appointmentNumber +
+            " - " +
+            current.patientName;
+
+        doneButton.disabled = false;
+
+        if (next) {
+
+            nextAppointment.textContent =
+                next.appointmentNumber +
+                " - " +
+                next.patientName;
+
+        } else {
+
+            nextAppointment.textContent =
+                "No upcoming appointment";
+        }
+
+        doneButton.onclick = function () {
+
+            const confirmed = confirm(
+                "Have you completed checking this patient?"
+            );
+
+            if (!confirmed) {
+                return;
+            }
+
+            appointments.shift();
+
+            displayAppointments();
+        };
+    }
+
+    function showNoAppointments() {
+
+        currentAppointment.textContent =
+            "No current appointment";
 
         nextAppointment.textContent =
-            "Please make sure the server is running";
+            "No upcoming appointment";
 
         doneButton.disabled = true;
     }
-}
 
-function displayAppointments() {
+    loadAppointments();
 
-    if (appointments.length === 0) {
-        showNoAppointments();
-        return;
-    }
+    setInterval(function () {
 
-    const current = appointments[0];
-    const next = appointments[1];
+        loadAppointments();
 
-    currentAppointment.textContent =
-        current.appointmentNumber +
-        " - " +
-        current.patientName;
-
-    doneButton.disabled = false;
-
-    if (next) {
-        nextAppointment.textContent =
-            next.appointmentNumber +
-            " - " +
-            next.patientName;
-    } else {
-        nextAppointment.textContent =
-            "No upcoming appointment";
-    }
-
-    doneButton.onclick = function () {
-
-        const confirmed = confirm(
-            "Have you completed checking this patient?"
-        );
-
-        if (!confirmed) {
-            return;
-        }
-
-        sessionStorage.setItem(
-            "completedAppointment",
-            current.appointmentNumber
-        );
-
-        appointments.shift();
-
-        displayAppointments();
-    };
-}
-
-function showNoAppointments() {
-
-    currentAppointment.textContent =
-        "No current appointment";
-
-    nextAppointment.textContent =
-        "No upcoming appointment";
-
-    doneButton.disabled = true;
-}
-
-loadAppointments();
+    }, 5000);
 
 });
